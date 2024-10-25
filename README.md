@@ -21,3 +21,8 @@
     -- movies list
     -- movie card
 
+
+* GPT page
+- search bar
+- movieSuggestions
+
