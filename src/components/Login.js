@@ -1,20 +1,23 @@
 import React, { useState, useRef } from "react";
 import Header from "./Header";
 import { CheckValidateData } from "../utils/validate";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword,updateProfile } from "firebase/auth";
 import { auth } from "../utils/firebase";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { addUser} from '../utils/userSlice';
 
 
 export const Login = () => {
   const [isSignIn, setIsSignIn] = useState(true);
   const [errMsg, setErrMsg] = useState(null);
 
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const email = useRef(null);
   const password = useRef(null);
-  // const name = useRef(null);
+  const name = useRef(null);
 
   const handleClickValidate = () => {
     // Safely accessing values from refs
@@ -30,8 +33,16 @@ export const Login = () => {
   .then((userCredential) => {
     // Signed up 
     const user = userCredential.user;
-    console.log(user);
-    navigate("/browse")
+    updateProfile(user, {
+      displayName:name.current.value, photoURL: "https://avatars.githubusercontent.com/u/165911850?v=4"
+    }).then(() => {
+      const {uid, email, displayName,photoURL} = auth.currentUser;
+      dispatch(addUser({uid:uid,email:email,displayName:displayName,photoURL:photoURL}))
+      navigate("/browse")
+      
+    }).catch((error) => {
+      setErrMsg(error.message)
+    });
   })
   .catch((error) => {
     const errorCode = error.code;
@@ -81,7 +92,7 @@ export const Login = () => {
           </h1>
           {!isSignIn && (
             <input
-              // ref={name}
+              ref={name}
               type="text"
               placeholder="Full Name"
               className="w-80 py-3 px-2 my-2 bg-gray-800"
