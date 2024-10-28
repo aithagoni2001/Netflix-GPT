@@ -1,11 +1,11 @@
 import React, { useState, useRef } from "react";
-import Header from "./Header";
 import { CheckValidateData } from "../utils/validate";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword,updateProfile } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth } from "../utils/firebase";
-import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { addUser} from '../utils/userSlice';
+import { addUser } from '../utils/userSlice';
+import Header from "./Header";
+import { BG_NETFLIX_LOGO, USER_AVATAR } from "../utils/Constants";
 
 
 export const Login = () => {
@@ -13,74 +13,62 @@ export const Login = () => {
   const [errMsg, setErrMsg] = useState(null);
 
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+
 
   const email = useRef(null);
   const password = useRef(null);
   const name = useRef(null);
 
   const handleClickValidate = () => {
-    // Safely accessing values from refs
-    // console.log(email)
-    // console.log(password);
-    const message = CheckValidateData( email.current.value, password.current.value);
+    const message = CheckValidateData(email.current.value, password.current.value);
     setErrMsg(message);
-    if(message) return;
+    if (message) return;
 
     if (!isSignIn) {
-      // signUp logic
+      // Sign-Up Logic
       createUserWithEmailAndPassword(auth, email.current.value, password.current.value)
-  .then((userCredential) => {
-    // Signed up 
-    const user = userCredential.user;
-    updateProfile(user, {
-      displayName:name.current.value, photoURL: "https://avatars.githubusercontent.com/u/165911850?v=4"
-    }).then(() => {
-      const {uid, email, displayName,photoURL} = auth.currentUser;
-      dispatch(addUser({uid:uid,email:email,displayName:displayName,photoURL:photoURL}))
-      navigate("/browse")
-      
-    }).catch((error) => {
-      setErrMsg(error.message)
-    });
-  })
-  .catch((error) => {
-    const errorCode = error.code;
-    const errorMessage = error.message;
-    setErrMsg(errorCode +" "+ errorMessage)
-  });
-
+        .then((userCredential) => {
+          const user = userCredential.user;
+          updateProfile(user, {
+            displayName: name.current.value,
+            photoURL: USER_AVATAR
+          }).then(() => {
+            const { uid, email, displayName, photoURL } = auth.currentUser;
+            dispatch(addUser({ uid, email, displayName, photoURL }));
+          }).catch((error) => {
+            setErrMsg(error.message);
+          });
+        })
+        .catch((error) => {
+          setErrMsg(error.code + " " + error.message);
+        });
     } else {
-      // signIn logic
+      // Sign-In Logic
       signInWithEmailAndPassword(auth, email.current.value, password.current.value)
-  .then((userCredential) => {
-    // Signed in 
-    const user = userCredential.user;
-    console.log(user);
-    navigate("/browse")
-  })
-  .catch((error) => {
-    const errorCode = error.code;
-    const errorMessage = error.message;
-    setErrMsg(errorCode +" "+ errorMessage)
-  });
-
-      
+        .then((userCredential) => {
+          const user = userCredential.user;
+          const { uid, email, displayName, photoURL } = user;
+          dispatch(addUser({ uid, email, displayName, photoURL }));
+        })
+        .catch((error) => {
+          setErrMsg(error.code + " " + error.message);
+        });
     }
   };
 
   const toggleSignIn = () => {
     setIsSignIn(!isSignIn);
-    setErrMsg(null); // Clear error message on toggle
+    setErrMsg(null);
   };
 
   return (
     <div>
-      <Header />
+      <div className=""><Header/></div>
+     
       <div className="relative">
         <img
           className="absolute"
-          src="https://assets.nflxext.com/ffe/siteui/vlv3/7c0e18aa-2c95-474d-802e-7f30e75dcca4/web/IN-en-20241014-TRIFECTA-perspective_e7121311-c11e-4809-a3e6-22abffa33569_large.jpg"
+          src={BG_NETFLIX_LOGO}
           alt="netflix-bg-IMG"
         />
         <form
