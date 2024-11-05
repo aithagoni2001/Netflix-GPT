@@ -9,4 +9,4 @@ const SecondaryMovieContainer = () => {
   )
 }
 
-export default SecondaryMovieContainer
+export default SecondaryMovieContainer;
