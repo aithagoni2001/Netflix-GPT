@@ -10,7 +10,7 @@ const moviesSlice = createSlice({
         addNowPlayingMovies:(state,action)=>{
             console.log(action.payload);
             
-            state.nowPlayingMovies=action.payload
+         state.nowPlayingMovies= action.payload
 
         }
     }
