@@ -1,23 +1,23 @@
-import React from 'react'
-import useBackgroundTrailer from "../hooks/useBackgroundTrailer"
+import React from 'react';
+import useBackgroundTrailer from "../hooks/useBackgroundTrailer";
 import { useSelector } from 'react-redux';
 
-const BackgroundTrailer = ({movieid}) => {
+const BackgroundTrailer = ({ movieid }) => {
   const TrailerVideo = useSelector((store) => store.movies?.backgroundTrailer);
+  useBackgroundTrailer(movieid);
 
-  useBackgroundTrailer(movieid)
   return (
-    <div className='w-full'>
+    <div className="absolute top-0 left-0 w-full h-full z-0">
       <iframe
-        src={"https://www.youtube.com/embed/D6mC2rXALOE?si=gCBw8-HmNZkO-wcr"+TrailerVideo?.key}
-        title="YouTube video player"
+        className="w-full h-full"
+       src = {"https://www.youtube.com/embed/D6mC2rXALOE?si=gCBw8-HmNZkO-wcr"+TrailerVideo?.key +"?&autoplay=1&mute=1"}       
+       title="YouTube video player"
         frameBorder="0"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-        referrerPolicy="strict-origin-when-cross-origin"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
         allowFullScreen
       ></iframe>
     </div>
   );
 }
 
-export default BackgroundTrailer
+export default BackgroundTrailer;

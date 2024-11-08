@@ -13,8 +13,7 @@ const Header = () => {
 
   const handleSignOut = () => {
     signOut(auth)
-      .then(() => {
-      })
+      .then(() => {})
       .catch(() => {
         navigate("/error");
       });
@@ -35,20 +34,12 @@ const Header = () => {
   }, []);
 
   return (
-   <div className="bg-black ">
-    <div className="absolute my-0 mx-20  bg-gradient-to-b z-10 from-black">
-      <img className="w-48  "
-        src={LOGO}
-        alt="netflix logo"
-      /> </div>
+    <div className="absolute top-0 left-0 w-full flex justify-between items-center px-10 py-4 z-20 bg-gradient-to-b from-black/70 to-transparent">
+      <img className="w-32" src={LOGO} alt="Netflix logo" />
       {user && (
-        <div className="flex mx-10 justify-end text-white">
-          <img
-            className="w-10 my-5 rounded-lg h-10"
-            src={user?.photoURL}
-            alt="user avatar"
-          />
-          <button onClick={handleSignOut} className="text-white px-3">
+        <div className="flex items-center space-x-4">
+          <img className="w-10 h-10 rounded-full" src={user?.photoURL} alt="User avatar" />
+          <button onClick={handleSignOut} className="text-white">
             Sign Out
           </button>
         </div>
